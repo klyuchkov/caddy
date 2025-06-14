@@ -1,15 +1,15 @@
 caddy.diase.ru {
         # Set this path to your site's directory.
-#	respond "Hello, world!"
+#	respond "Hello, world! caddy.diase.ru"
 #       root * /var/www/mysite
         log {
                 output file /var/log/caddy/access.log
         }
         root * /var/www/html
-        basicauth {
-                admin ${AUTH}
-        }
-        # Enable the static file server.
+#        basicauth {
+#                admin ${AUTH}
+#}
+	#Enable the static file server.
         file_server
 
         # Another common task is to set up a reverse proxy:
@@ -20,7 +20,11 @@ caddy.diase.ru {
 }
 
 gitlab.diase.ru {
-	respond "Hello, world! This www.gitlab-rm.diase.ru"
+#	respond "Hello, world! This www.gitlab-rm.diase.ru"
+	reverse_proxy gitlab:8000
+#	tls ${MAIL}
+}
 
-#	reverse_proxy grafana:3000
+grafana.diase.ru {
+	reverse_proxy grafana:3000
 }

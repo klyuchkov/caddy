@@ -6,6 +6,7 @@ services:
     container_name: caddy
     ports:
       - "80:80"
+#      - "81:81"
       - "443:443"
 #      - "443:443/udp"
     volumes:
@@ -14,21 +15,50 @@ services:
       - caddy_config:/config
       - ./site:/var/www/html
     restart: unless-stopped
+#    networks:
+#      - gitlab-network
+
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    hostname: gitlab.diase.ru  # Замените на ваш домен
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.diase.ru:8000'  # Замените на ваш домен
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+    volumes:
+      - ./gitlab/data:/var/opt/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/data/sockets:/var/run/docker.sock
+    ports:
+      - "8000:80"
+      - "2222:2222"  # SSH порт
+    networks:
+      - gitlab-network
 
 #  dockersetup:
 #    build:
 #      context: .
 #      dockerfile: Dockerfile
 
-#  grafana:
-#    image: grafana/grafana
-#    container_name: grafana
-  # ports:
-    #  - 3000:3000
-#    environment:
-#      GF_SECURITY_ADMIN_USER: 'grafana'
-#      GF_SECURITY_ADMIN_PASSWORD: 'grafana'
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    environment:
+      GF_SECURITY_ADMIN_USER: 'grafana'
+      GF_SECURITY_ADMIN_PASSWORD: 'grafana'
 
 volumes:
   caddy_data:
   caddy_config:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
+
+networks:
+  gitlab-network:
+    driver: bridge
