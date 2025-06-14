@@ -1,0 +1,3 @@
+FROM ubuntu:latest
+RUN apk add bash nano
+CMD ["/bin/bash"]

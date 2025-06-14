@@ -1,0 +1,26 @@
+caddy.diase.ru {
+        # Set this path to your site's directory.
+#	respond "Hello, world!"
+#       root * /var/www/mysite
+        log {
+                output file /var/log/caddy/access.log
+        }
+        root * /var/www/html
+        basicauth {
+                admin ${AUTH}
+        }
+        # Enable the static file server.
+        file_server
+
+        # Another common task is to set up a reverse proxy:
+        # reverse_proxy localhost:8080
+
+        # Or serve a PHP site through php-fpm:
+        # php_fastcgi localhost:9000
+}
+
+gitlab.diase.ru {
+	respond "Hello, world! This www.gitlab-rm.diase.ru"
+
+#	reverse_proxy grafana:3000
+}
